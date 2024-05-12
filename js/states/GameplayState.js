@@ -5,6 +5,7 @@ import { ctx, canvas } from '../canvas.js'
 import {resetStats, Stats} from '../classes/Stats.js'
 import GameObject from '../classes/GameObject.js'
 import Colors from '../classes/Colors.js'
+import keyboard from '../keyboard.js'
 
 function createEnemy() {
     let x = 0,
@@ -42,6 +43,7 @@ export default class GameplayState extends GameState {
 
     constructor() {
         super()
+        this.escapeHold = false
     }
 
     start() {
@@ -54,16 +56,17 @@ export default class GameplayState extends GameState {
         Player.setATK(2)
     }
 
-    update() {
+    update(dt) {
+        if(this.escapeHold && !keyboard["Escape"]) this.escapeHold = false
+        if(keyboard["Escape"] && !this.escapeHold) stateMachine.resetState("pause")
         //return stateMachine.setState("upgrade")
         if(!Player.alive) return stateMachine.setState("death");
-        if(Stats.frameCounter % Player.fireRate === 0) Player.fire();
-    
-        if(Stats.frameCounter % 10 === 0) createEnemy();
+        //if(Player.LVL < 25 && Stats.frameCounter % 10 === 0) return Player.levelUp()
+        if(Stats.frameCounter % Math.max(10 - Player.LVL, 1) === 0) createEnemy();
         const entities = [...GameObject.list].sort((a, b) => a.z - b.z);
         for(let i = 0; i < entities.length;i++) {
             const entity = entities[i]
-            if(entity.update) entity.update()
+            if(entity.update) entity.update(dt)
         }
 
         buildUI()

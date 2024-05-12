@@ -7,7 +7,14 @@ export default class Moveable extends Drawable {
     }
 
     move(dx, dy) {
+        if(dx && dy) {
+            dx *= Math.sqrt(2) / 2
+            dy *= Math.sqrt(2) / 2
+        }
+
         this.x += dx * this.SPD;
         this.y += dy * this.SPD;
+
+        
     }
 }

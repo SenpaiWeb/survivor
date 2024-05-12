@@ -3,7 +3,7 @@ const Colors = {
     ENEMY: "red",
     XP: "blue",
     HP: "green",
-    BULLET: "orange"
+    BULLET: "orange",
 }
 
 export default Colors;

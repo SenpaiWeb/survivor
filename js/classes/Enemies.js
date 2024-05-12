@@ -1,11 +1,13 @@
-import EnemyBuilder from './Enemy.js'
-import { Player } from './Player.js'
-import { getDistance, substractDistance } from '../util/geometry.js'
-import { ctx } from '../canvas.js'
+import {EnemyBuilder} from './Enemy.js'
+import { getDistance } from '../util/geometry.js'
 import GameObject from './GameObject.js'
 import GameplayTags from './Tags.js'
+import BasicEnemy from './enemies/BasicEnemy.js'
+import ButterflyEnemy from './enemies/ButterflyEnemy.js'
 
 let enemiesInstance
+
+const enemyTypes = [BasicEnemy, ButterflyEnemy]
 
 class Enemies {
 
@@ -14,29 +16,16 @@ class Enemies {
 
     spawnEnemy(x, y) {
         const speed = 3 + (-.2 + (Math.random() * .4))
-        const enemy = EnemyBuilder.create(x, y, 25, 25)
-                                  .setSPD(speed)
-                                  .setHP(4)
+        const base = enemyTypes[Math.floor(Math.random() * enemyTypes.length)]
+        const enemy = EnemyBuilder.create(base, x, y, 25, 25)
                                   .setXP(3)
                                   .build()
 
         return enemy
     }
 
-    /*createBigEnemy() {
-        const initialEnemy = this.createEnemy()
-    }*/
-
     getClosest(go) {
         return [...GameObject.GetAllWithTag(GameplayTags.ENEMY)].sort((a, b) => getDistance(a.center, go.center) - getDistance(b.center, go.center))[0]
-    }
-
-    get sorted() {
-        return GameObject.GetAllWithTag(GameplayTags.ENEMY).sort((a, b) => getDistance(a.center, Player.center) - getDistance(b.center, Player.center))
-    }
-
-    get closest() {
-        return this.sorted[0]
     }
 }
 

@@ -16,7 +16,7 @@ export default class DeathState extends GameState {
         if(keyboard["Enter"]) stateMachine.resetState("gameplay")
     }
 
-    update() {
+    update(dt) {
         this.processInputs()
         buildUI()
     }

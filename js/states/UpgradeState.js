@@ -9,18 +9,20 @@ let activeChoice = 0
 const maxUpgrades = 4
 let upgrades = []
 
-let leftHold = false,
-    rightHold = false
-
 
 function buildUI() {
     for(let i = 0; i < upgrades.length; i++) {
-        const upgradeProp = upgrades[i]
-        const upgrade = translateUpgrade(upgradeProp)
+        const upgrade = upgrades[i]
+        //const upgrade = translateUpgrade(upgradeProp)
 
         ctx.font = "24px serif"
         ctx.fillStyle = activeChoice === i ? "red" : "black"
         let x = canvas.width / maxUpgrades * i + (canvas.width / maxUpgrades * .3)
+        if(upgrade.icon) {
+            const image = new Image()
+            image.src = "./icons/" + upgrade.icon
+            ctx.drawImage(image, x, canvas.height / 2 - 160, 64, 64)
+        }
         ctx.fillText(upgrade.title, x, canvas.height / 2 - 80)
         ctx.fillText(upgrade.description, x, canvas.height / 2)
     }
@@ -33,41 +35,52 @@ function translateUpgrade(upgradeProp) {
     return upgrade
 }
 
+function getRandomUpgrade() {
+    let upgrade
+    do {
+        upgrade = translateUpgrade({...Upgrades[Math.floor(Math.random() * Upgrades.length)]})
+    } while(upgrades.find(translated => translated.title == upgrade.title))
+    return upgrade
+}
+
 
 export default class UpgradeState extends GameState {
     constructor() {
         super()
+        this.leftHold = false
+        this.rightHold = false
+        this.enterHold = false
+        this.upgrades = []
     }
 
     start() {
         super.start()
-
-        upgrades = [...Upgrades]
-        /*for(let i = 0;i < maxUpgrades; i++) {
-            const upgrade = getRandomUpgrade()
-            upgrades.push(upgrade)
-        }*/
+        this.leftHold = true
+        this.rightHold = true
+        this.enterHold = true
+        upgrades = []
+        for(let i = 0; i < maxUpgrades; i++) upgrades.push(getRandomUpgrade())
     }
 
     processInputs() {
+        if(this.enterHold && !keyboard["Enter"]) this.enterHold = false
         if(keyboard["ArrowLeft"]) {
-            if(!leftHold) activeChoice = Math.max(activeChoice - 1, 0)
-            leftHold = true
-        } else leftHold = false
+            if(!this.leftHold) activeChoice = Math.max(activeChoice - 1, 0)
+            this.leftHold = true
+        } else this.leftHold = false
         if(keyboard["ArrowRight"]) {
-            if(!rightHold) activeChoice = Math.min(activeChoice + 1, upgrades.length)
-            rightHold = true
-        } else rightHold = false
+            if(!this.rightHold) activeChoice = Math.min(activeChoice + 1, upgrades.length - 1)
+            this.rightHold = true
+        } else this.rightHold = false
 
         if(keyboard["Enter"]) {
-            const upgrade = translateUpgrade(upgrades[activeChoice])
-            console.log(upgrade)
+            const upgrade = upgrades[activeChoice]
             Player.addUpgrade(upgrade)
             stateMachine.setState("gameplay")
         }
     }
 
-    update() {
+    update(dt) {
         this.processInputs()
         buildUI()
         //ctx.fillText("")

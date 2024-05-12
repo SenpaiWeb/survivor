@@ -18,7 +18,6 @@ export function getDirection(pointA, pointB) {
 export function isOverlapping(goA, goB) {
     const overlapX = goA.x>= goB.center.x
     const overlapY = goA.y >= goB.center.y
-    const dist = getDistance(goA.center, goB.center)
     
-    return overlapX && overlapY//dist <= 20
+    return overlapX && overlapY
 }

@@ -27,10 +27,10 @@ class StateMachine {
         this.currentName = name
     }
 
-    update() {
+    update(dt) {
         if(this.currentState) {
-            if(!this.currentState.started) this.currentState.start()
-            this.currentState.update()
+            if(!this.currentState.started) this.currentState.start(dt)
+            this.currentState.update(dt)
             this.setSceneText()
         }
     }
@@ -45,7 +45,7 @@ export class GameState {
         this.started = true
     }
 
-    update() {
+    update(dt) {
         
     }
 }

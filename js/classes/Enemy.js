@@ -1,17 +1,17 @@
 import Vulnerable from './Vulnerable.js'
 import Colors from './Colors.js'
 import Tags from './Tags.js'
-import Enemies from './Enemies.js'
 import { Player } from './Player.js'
 import XP from './XP.js'
 import {Stats} from './Stats.js'
-import { ctx } from '../canvas.js'
+import { canvas, ctx } from '../canvas.js'
 import { getDistance, substractDistance } from '../util/geometry.js'
 
-class Enemy extends Vulnerable {
+export class Enemy extends Vulnerable {
     constructor(x, y, w, h) {
         super(x, y, w, h, Colors.ENEMY, 1)
         this.xpReward = 1
+        this.baseInvulnerableCooldown = 80
         this.addTag(Tags.ENEMY)
     }
 
@@ -22,18 +22,10 @@ class Enemy extends Vulnerable {
         ctx.fillRect(this.x, this.y + this.h, this.w * (Math.max(this.HP, 0) / this.maxHP), this.h / 5)
     }
 
-    inflictDamage(damage) {
-        super.inflictDamage(damage)
-        console.log('received', damage, 'damage')
-    }
-
     dispose() {
         super.dispose()
         Player.addXP(this.xpReward);
         Stats.totalKills++;
-    }
-
-    checkCollision() {
     }
 
     getPlayerDistance() {
@@ -43,15 +35,9 @@ class Enemy extends Vulnerable {
     }
 
     update() {
-        const { direction, distance } = this.getPlayerDistance()
-
-            if(distance > 0) {
-                const angleX = direction.x / distance
-                const angleY = direction.y / distance
-    
-                this.move(angleX, angleY)
-            }
+        super.update()
         this.draw()
+        if(this.x > canvas.width + 200 || this.y > canvas.height + 200 || this.x < -200 || this.y < -200) super.dispose()
     }
 }
 
@@ -69,7 +55,7 @@ class Enemy extends Vulnerable {
 
 
 
-export default class EnemyBuilder {
+export class EnemyBuilder {
     constructor(enemy) {
         this.enemy = enemy
     }
@@ -99,7 +85,7 @@ export default class EnemyBuilder {
         return this.enemy
     }
 
-    static create(x, y, w, h) {
-        return new EnemyBuilder(new Enemy(x, y, w, h))
+    static create(base, x, y, w, h) {
+        return new EnemyBuilder(new base(x, y, w, h))
     }
 }

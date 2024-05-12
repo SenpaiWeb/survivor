@@ -18,9 +18,14 @@ export default class GameObject {
         this.y = y
     }
 
+    setCenter(x, y) {
+        this.x = x + this.w / 2
+        this.y = y + this.h / 2
+    }
+
     dispose() {
         const index = GameObject.list.indexOf(this)
-        if(index === -1) return
+        if(index === -1) return console.log('could not find index of ', this)
         GameObject.list.splice(index, 1)
     }
 

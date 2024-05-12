@@ -12,6 +12,7 @@ class Bullet extends Drawable {
         this.size = this.w / 2
         this.SPD = 30
         this.ATK = 0
+        this.invincible = false
         this.addTag(Tags.BULLET)
     }
 
@@ -31,9 +32,7 @@ class Bullet extends Drawable {
     update() {
         this.move()
         this.draw()
-        if(this.checkCollision()) {
-            this.dispose()
-        }
+        if((this.checkCollision() || this.age > 2e3) && !this.invincible) this.dispose()
     }
 
     checkCollision() {
@@ -66,6 +65,11 @@ export default class BulletBuilder {
         return this
     }
 
+    setInfinite(bool) {
+        this.bullet.invincible = bool
+        return this
+    }
+
     setSize(size) {
         this.bullet.size = size
         this.bullet.w = size * 2
@@ -74,6 +78,8 @@ export default class BulletBuilder {
     }
 
     build() {
+        this.bullet.x -= this.bullet.w / 2
+        this.bullet.y -= this.bullet.h / 2
         return this.bullet
     }
 

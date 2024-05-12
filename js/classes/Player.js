@@ -7,13 +7,11 @@ import {Stats} from './Stats.js'
 import keyboard from '../keyboard.js'
 import BulletBuilder from './Bullet.js'
 import { stateMachine } from '../StateMachine.js'
+import GameObject from './GameObject.js'
 
 const PLAYER_WIDTH = 35;
 const PLAYER_HEIGHT = 35;
 const PLAYER_SPEED = 5;
-
-let invulnerableCooldown = 0,
-    lastFrameTime = Date.now()
 
 /**
  * @type {PlayerBase}
@@ -35,16 +33,11 @@ class PlayerBase extends Vulnerable {
         this.z = 10
         this.LVL = 0
         this.XP = 0
-        this.fireRate = 5
+        this.baseFireRate = 100
+        this.fireRate = this.baseFireRate
         this.upgrades = []
+        this.baseInvulnerableCooldown = 2e3
         this.addTag(Tags.PLAYER)
-    }
-
-    inflictDamage(damage) {
-        if(invulnerableCooldown > 0) return
-        super.inflictDamage(damage)
-        console.log('player received', damage, 'damage, now invulnerable for 2 seconds.')
-        invulnerableCooldown = 2 * 1e3;
     }
 
     addUpgrade(upgrade) {
@@ -104,23 +97,23 @@ class PlayerBase extends Vulnerable {
         if(keyboard["ArrowDown"]) y += 1
         if(keyboard["ArrowLeft"]) x -= 1
         if(keyboard["ArrowRight"]) x += 1
-    
-        if(x && y) {
-            x *= Math.sqrt(2) / 2
-            y *= Math.sqrt(2) / 2
-        }
+
+        if(keyboard["Enter"]) console.log(GameObject.list)
     
         this.move(x, y)
     }
 
-    update() {
-        const currentFrameTime = Date.now()
-        const dt = currentFrameTime - lastFrameTime
-        invulnerableCooldown -= dt
+    update(dt) {
+        this.fireRate -= dt
+
+        if(this.fireRate <= 0) {
+            this.fire()
+            this.fireRate = this.baseFireRate
+        }
         this.processInputs()
+        super.update(dt)
         this.draw()
         this.checkCollision()
-        lastFrameTime = currentFrameTime
     }
 }
 
