@@ -7,6 +7,11 @@ export default class Drawable extends GameObject {
         this.color = color
     }
 
+    setSize(width, height) {
+        this.w = width
+        this.h = height
+    }
+
     draw() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.w, this.h)

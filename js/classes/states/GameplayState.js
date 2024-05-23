@@ -1,11 +1,11 @@
-import { createPlayer, Player } from '../classes/Player.js'
-import Enemies from '../classes/Enemies.js'
+import { createPlayer, Player } from '../Player.js'
+import Enemies from '../Enemies.js'
 import { GameState, stateMachine } from '../StateMachine.js'
-import { ctx, canvas } from '../canvas.js'
-import {resetStats, Stats} from '../classes/Stats.js'
-import GameObject from '../classes/GameObject.js'
-import Colors from '../classes/Colors.js'
-import keyboard from '../keyboard.js'
+import { ctx, canvas } from '../../canvas.js'
+import {resetStats, Stats} from '../Stats.js'
+import GameObject from '../GameObject.js'
+import Colors from '../Colors.js'
+import keyboard from '../../keyboard.js'
 
 function createEnemy() {
     let x = 0,
@@ -22,6 +22,14 @@ function createEnemy() {
     Enemies.spawnEnemy(x, y)
 }
 
+function drawProgressBar(x, y, progress, length, color) {
+    const barHeight = 20
+    ctx.fillStyle = "gray"
+    ctx.fillRect(x, y, length, barHeight)
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, progress, barHeight)
+}
+
 function buildUI() {
     ctx.font = "24px serif";
     ctx.fillStyle = "black";
@@ -29,14 +37,11 @@ function buildUI() {
     ctx.fillText(`Entities alive: ${GameObject.list.length}`, 20, (2 * 24) + (2 * 10))
     ctx.fillText(`Total kills: ${Stats.totalKills}`, 20, (3 * 24) + (3 * 10))
     ctx.fillText(`Player level: ${Player.LVL}`, 20, (4 * 24) + (4 * 10))
-    ctx.fillText(`Player health: ${Player.HP}`, 20, (5 * 24) + (5 * 10))
+    ctx.fillText(`Player health: ${(Player.HP).toFixed(2)}`, 20, (5 * 24) + (5 * 10))
     ctx.fillText(`Total shots: ${Stats.totalShots}`, 20, (6 * 24) + (6 * 10))
     
-    const barHeight = 20
-    ctx.fillStyle = "gray"
-    ctx.fillRect(40, canvas.height - 40, canvas.width - 80, barHeight)
-    ctx.fillStyle = Colors.XP
-    ctx.fillRect(40, canvas.height - 40, (canvas.width - 80) * (Player.XP / Player.neededXp), barHeight)
+    drawProgressBar(40, canvas.height - 60, (canvas.width - 80) * (Player.HP / Player.maxHP), canvas.width - 80, Colors.HP)
+    drawProgressBar(40, canvas.height - 40, (canvas.width - 80) * (Player.XP / Player.neededXp), canvas.width - 80, Colors.XP)
 }
 
 export default class GameplayState extends GameState {
@@ -57,8 +62,8 @@ export default class GameplayState extends GameState {
     }
 
     update(dt) {
-        if(this.escapeHold && !keyboard["Escape"]) this.escapeHold = false
         if(keyboard["Escape"] && !this.escapeHold) stateMachine.resetState("pause")
+        if(this.escapeHold && !keyboard["Escape"]) this.escapeHold = false
         //return stateMachine.setState("upgrade")
         if(!Player.alive) return stateMachine.setState("death");
         //if(Player.LVL < 25 && Stats.frameCounter % 10 === 0) return Player.levelUp()

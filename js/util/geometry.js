@@ -14,10 +14,3 @@ export function getDirection(pointA, pointB) {
 
     return { x: d.x / dist, y: d.y / dist }
 }
-
-export function isOverlapping(goA, goB) {
-    const overlapX = goA.x>= goB.center.x
-    const overlapY = goA.y >= goB.center.y
-    
-    return overlapX && overlapY
-}

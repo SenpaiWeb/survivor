@@ -1,11 +1,11 @@
 import { canvas, ctx } from './canvas.js';
-import { stateMachine } from './StateMachine.js';
-import GameplayState from './states/GameplayState.js';
-import UpgradeState from './states/UpgradeState.js';
-import PauseState from './states/PauseState.js'
+import { stateMachine } from './classes/StateMachine.js';
+import GameplayState from './classes/states/GameplayState.js';
+import UpgradeState from './classes/states/UpgradeState.js';
+import PauseState from './classes/states/PauseState.js'
 
 import {Stats} from './classes/Stats.js';
-import DeathState from './states/DeathState.js';
+import DeathState from './classes/states/DeathState.js';
 
 stateMachine.addState("gameplay", new GameplayState())
 stateMachine.addState("upgrade", new UpgradeState())

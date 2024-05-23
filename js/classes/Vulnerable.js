@@ -8,12 +8,13 @@ export default class Vulnerable extends Moveable {
         this.ATK = 0
         this.invulnerableCooldown = 0
         this.baseInvulnerableCooldown = 0
+        this.healOverTime = 0
         this.effects = []
         this.selfATK = 0
     }
 
     inflictDamage(damage) {
-        if(this.invulnerableCooldown) return
+        if(this.invulnerableCooldown > 0) return
         this.HP -= damage;
         this.invulnerableCooldown = this.baseInvulnerableCooldown
 
@@ -49,6 +50,7 @@ export default class Vulnerable extends Moveable {
 
     update(dt) {
         this.invulnerableCooldown -= dt;
+        this.HP = Math.min(this.HP + this.healOverTime, this.maxHP)
         for(let i = 0; i < this.effects.length; i++) {
             const effect = this.effects[i]
             effect.update(dt)

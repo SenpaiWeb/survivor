@@ -2,7 +2,7 @@ const Colors = {
     PLAYER: "black",
     ENEMY: "red",
     XP: "blue",
-    HP: "green",
+    HP: "lime",
     BULLET: "orange",
 }
 

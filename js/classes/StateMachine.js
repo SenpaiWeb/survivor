@@ -1,4 +1,4 @@
-import { canvas, ctx } from "./canvas.js"
+import { canvas, ctx } from "../canvas.js"
 
 class StateMachine {
     constructor(initialState) {

@@ -4,10 +4,11 @@ import GameObject from './GameObject.js'
 import GameplayTags from './Tags.js'
 import BasicEnemy from './enemies/BasicEnemy.js'
 import ButterflyEnemy from './enemies/ButterflyEnemy.js'
+import Boss from './enemies/Boss.js'
 
 let enemiesInstance
 
-const enemyTypes = [BasicEnemy, ButterflyEnemy]
+const enemyTypes = [BasicEnemy, ButterflyEnemy, /*Boss*/]
 
 class Enemies {
 

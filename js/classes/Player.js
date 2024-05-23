@@ -6,7 +6,7 @@ import Vulnerable from './Vulnerable.js'
 import {Stats} from './Stats.js'
 import keyboard from '../keyboard.js'
 import BulletBuilder from './Bullet.js'
-import { stateMachine } from '../StateMachine.js'
+import { stateMachine } from './StateMachine.js'
 import GameObject from './GameObject.js'
 
 const PLAYER_WIDTH = 35;

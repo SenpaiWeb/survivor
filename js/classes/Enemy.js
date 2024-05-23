@@ -53,8 +53,6 @@ export class Enemy extends Vulnerable {
 
 
 
-
-
 export class EnemyBuilder {
     constructor(enemy) {
         this.enemy = enemy

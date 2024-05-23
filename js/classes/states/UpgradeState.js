@@ -1,13 +1,15 @@
-import keyboard from "../keyboard.js"
+import keyboard from "../../keyboard.js"
 import { GameState, stateMachine } from "../StateMachine.js"
-import { Upgrades } from '../classes/Upgrade.js'
-import { Player } from '../classes/Player.js'
-import { canvas, ctx } from "../canvas.js"
+import { Upgrades } from '../Upgrade.js'
+import { Player } from '../Player.js'
+import { canvas, ctx } from "../../canvas.js"
 
 let activeChoice = 0
 
 const maxUpgrades = 4
 let upgrades = []
+
+let enemyChoice = 0
 
 
 function buildUI() {
@@ -15,16 +17,17 @@ function buildUI() {
         const upgrade = upgrades[i]
         //const upgrade = translateUpgrade(upgradeProp)
 
-        ctx.font = "24px serif"
-        ctx.fillStyle = activeChoice === i ? "red" : "black"
+        ctx.font = (activeChoice === i ? "32px" : "24px") + " 'Segoe UI Emoji'"
+        ctx.fillStyle =  "black"
         let x = canvas.width / maxUpgrades * i + (canvas.width / maxUpgrades * .3)
-        if(upgrade.icon) {
+
+        if(upgrade.card) {
             const image = new Image()
-            image.src = "./icons/" + upgrade.icon
-            ctx.drawImage(image, x, canvas.height / 2 - 160, 64, 64)
+            image.src = "./cards/" + upgrade.card
+            ctx.drawImage(image, x, canvas.height / 2 - 160, 244, 386)
         }
-        ctx.fillText(upgrade.title, x, canvas.height / 2 - 80)
-        ctx.fillText(upgrade.description, x, canvas.height / 2)
+        ctx.fillText(upgrade.title, x + 244 / 2 - upgrade.title.length * 8, canvas.height / 2 + 160)
+        ctx.fillText(upgrade.description, x, canvas.height / 2 + 200)
     }
 }
 
@@ -62,6 +65,10 @@ export default class UpgradeState extends GameState {
         for(let i = 0; i < maxUpgrades; i++) upgrades.push(getRandomUpgrade())
     }
 
+    giveUpgrade(target, upgrade) {
+            target.addUpgrade(upgrade)
+    }
+
     processInputs() {
         if(this.enterHold && !keyboard["Enter"]) this.enterHold = false
         if(keyboard["ArrowLeft"]) {
@@ -75,7 +82,7 @@ export default class UpgradeState extends GameState {
 
         if(keyboard["Enter"]) {
             const upgrade = upgrades[activeChoice]
-            Player.addUpgrade(upgrade)
+            this.giveUpgrade(Player, upgrade)
             stateMachine.setState("gameplay")
         }
     }

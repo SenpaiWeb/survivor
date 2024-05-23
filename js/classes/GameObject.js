@@ -1,4 +1,4 @@
-import { deletePlayer } from './Player.js'
+import { deletePlayer, Player } from './Player.js'
 
 export default class GameObject {
     static list = []

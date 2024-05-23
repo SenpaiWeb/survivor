@@ -1,6 +1,6 @@
 import { GameState, stateMachine } from "../StateMachine.js"
-import keyboard from "../keyboard.js"
-import { canvas, ctx } from "../canvas.js"
+import keyboard from "../../keyboard.js"
+import { canvas, ctx } from "../../canvas.js"
 
 function buildUI() {
     ctx.fillText("Play again?", canvas.width / 2, canvas.height / 2)

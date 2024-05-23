@@ -4,6 +4,8 @@ export default class BasicEnemy extends Enemy {
     constructor(x, y, w, h) {
         super(x, y, w, h)
         this.SPD = 3
+        this.selfATK = 10
+        this.ATK = 2
         this.setHealth(4)
     }
 
